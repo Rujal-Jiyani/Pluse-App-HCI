@@ -1,94 +1,10 @@
 import React from "react";
 import PulseLogo from "../components/PulseLogo.jsx";
+import { SirenIcon, ArrowIcon, BookIcon, ShieldIcon } from "../components/Icons.jsx";
 
-function SirenIcon() {
+export default function Home({ onStart, onReference, onGuidelines }) {
   return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M7 18v-6a5 5 0 0 1 10 0v6" />
-      <path d="M5 21h14" />
-      <path d="M21 12h1" />
-      <path d="M2 12h1" />
-      <path d="M12 2v1" />
-      <path d="m4.6 4.6.7.7" />
-      <path d="m19.4 4.6-.7.7" />
-      <path d="M9 18v-6a3 3 0 0 1 3-3" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 12h16" />
-      <path d="m14 6 6 6-6 6" />
-    </svg>
-  );
-}
-
-function BookIcon() {
-  return (
-    <svg
-      width="44"
-      height="44"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z" />
-      <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z" />
-    </svg>
-  );
-}
-
-function ShieldIcon() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5z" />
-      <path d="M12 8v6" />
-      <path d="M9 11h6" />
-    </svg>
-  );
-}
-
-export default function Home({ onStart }) {
-  const handleStart = onStart;
-
-  return (
-    <main className="screen">
+    <main className="screen home">
       <section className="brand">
         <div className="logo">
           <PulseLogo />
@@ -101,7 +17,7 @@ export default function Home({ onStart }) {
         </p>
       </section>
 
-      <button className="start-btn" onClick={handleStart}>
+      <button className="btn btn-primary start-btn" onClick={onStart}>
         <span className="start-left">
           <SirenIcon />
           <span>Start Emergency Session</span>
@@ -109,8 +25,8 @@ export default function Home({ onStart }) {
         <ArrowIcon />
       </button>
 
-      <section className="cards">
-        <button className="card" onClick={() => console.log("Medication Reference")}>
+      <section className="home-cards">
+        <button className="home-card" onClick={onReference}>
           <BookIcon />
           <span>
             Medication
@@ -118,7 +34,7 @@ export default function Home({ onStart }) {
             Reference
           </span>
         </button>
-        <button className="card" onClick={() => console.log("Protocols & Guidelines")}>
+        <button className="home-card" onClick={onGuidelines}>
           <ShieldIcon />
           <span>
             Protocols &amp;
@@ -127,6 +43,8 @@ export default function Home({ onStart }) {
           </span>
         </button>
       </section>
+
+      <p className="home-footer">For training and educational use · v0.2</p>
     </main>
   );
 }

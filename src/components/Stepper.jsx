@@ -1,37 +1,17 @@
 import React from "react";
+import { CheckIcon } from "./Icons.jsx";
 
-const STEPS = ["Patient", "Medication", "Result"];
+const STEPS = ["Patient Size", "Medication", "Calculation", "Verify"];
 
-function CheckIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#fff"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m5 12.5 4.5 4.5L19 7" />
-    </svg>
-  );
-}
-
+// currentStep: 0..3 is in progress, 4 = all complete.
 export default function Stepper({ currentStep = 0 }) {
   return (
-    <ol className="stepper" aria-label="Progress">
+    <ol className="stepper" aria-label={`Step ${Math.min(currentStep + 1, 4)} of 4`}>
       {STEPS.map((label, i) => {
-        const state = i < currentStep ? "done" : i === currentStep ? "current" : "";
+        const state = i < currentStep ? "done" : i === currentStep ? "current" : "todo";
         return (
-          <li
-            key={label}
-            className={`step ${state}`}
-            aria-current={i === currentStep ? "step" : undefined}
-          >
-            <span className="step-dot">{i < currentStep && <CheckIcon />}</span>
+          <li key={label} className={`step ${state}`} aria-current={state === "current" ? "step" : undefined}>
+            <span className="step-dot">{state === "done" && <CheckIcon size={18} />}</span>
             <span className="step-label">{label}</span>
           </li>
         );

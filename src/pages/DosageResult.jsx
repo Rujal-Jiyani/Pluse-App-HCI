@@ -1,182 +1,72 @@
 import React from "react";
-import PulseLogo from "../components/PulseLogo.jsx";
-import Stepper from "../components/Stepper.jsx";
-import { MEDICATION_DETAILS } from "../data/medications.js";
-import { FlaskIcon, JarIcon } from "./MedicationDetail.jsx";
-import { fmt } from "../utils/dose.js";
+import Screen from "../components/Screen.jsx";
+import { PrimaryButton, SecondaryButton } from "../components/Buttons.jsx";
+import { PencilIcon, InfoIcon } from "../components/Icons.jsx";
+import { DrugHero } from "./MedicationDetail.jsx";
+import { fmtDose, fmtVolume } from "../engine/units.js";
 
-const TEAL = "#1f6f6a";
-
-function BackIcon() {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M20 12H4" />
-      <path d="m10 6-6 6 6 6" />
-    </svg>
-  );
-}
-
-const base = {
-  width: 34,
-  height: 34,
-  viewBox: "0 0 36 36",
-  fill: "none",
-  strokeWidth: 1.8,
-  strokeLinecap: "round",
-  strokeLinejoin: "round",
-  "aria-hidden": true,
-};
-
-export function PersonIcon() {
-  return (
-    <svg {...base} stroke={TEAL}>
-      <circle cx="18" cy="18" r="13" />
-      <circle cx="18" cy="15" r="3.5" />
-      <path d="M11.5 25c1-3.5 3.5-5 6.5-5s5.500 1.500 6.500 5" />
-    </svg>
-  );
-}
-
-export function PillIcon() {
-  return (
-    <svg {...base} stroke={TEAL}>
-      <g transform="rotate(-45 18 18)">
-        <rect x="5" y="11" width="26" height="14" rx="7" />
-        <path d="M18 11v14" />
-      </g>
-    </svg>
-  );
-}
-
-export function SyringeIcon() {
-  return (
-    <svg {...base} stroke={TEAL}>
-      <path d="m24 5 7 7" />
-      <path d="m26 7 3 3" />
-      <path d="m21 9 6 6-13 13-6-6z" />
-      <path d="m8 28-4 4" />
-      <path d="m14 17 3 3M18 13l3 3M10 21l3 3" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 12h16" />
-      <path d="m14 6 6 6-6 6" />
-    </svg>
-  );
-}
-
-export default function DosageResult({ method, measurement, medicationId, onBack, onNext }) {
-  const med = MEDICATION_DETAILS[medicationId];
-  const weight = parseFloat(measurement);
-  const canCalculate =
-    method === "weight" &&
-    med &&
-    med.dosePerKgMg &&
-    med.concentrationMgPerMl &&
-    !Number.isNaN(weight) &&
-    weight > 0;
-
-  let doseMg = null;
-  let volumeMl = null;
-  if (canCalculate) {
-    doseMg = weight * med.dosePerKgMg;
-    volumeMl = doseMg / med.concentrationMgPerMl;
+export default function DosageResult({ result, onBack, onHome, onEdit, onNext }) {
+  if (!result) {
+    return (
+      <Screen onBack={onBack} onHome={onHome} step={2} title="Dosage Result">
+        <div className="notice error" role="alert">
+          A dose can't be calculated for these details. Go back and check the patient
+          measurement.
+        </div>
+      </Screen>
+    );
   }
 
+  const { drug, patient, dose, doseUnit, volumeMl, formula, capped, adult, usedIdeal } = result;
+  const isFluid = drug.kind === "fluid";
+  const editLabel = patient.method === "length" ? "Edit length" : "Edit weight";
+
   return (
-    <main className="screen result-screen">
-      <header className="top-bar">
-        <button className="back-btn" onClick={onBack} aria-label="Go back">
-          <BackIcon />
-        </button>
-        <div className="top-logo">
-          <PulseLogo />
-          <span>PULSE</span>
+    <Screen
+      onBack={onBack}
+      onHome={onHome}
+      step={2}
+      title="Dosage Result"
+      subtitle="Calculated from the entered patient details and medication information."
+      footer={
+        <div className="btn-row">
+          <SecondaryButton icon={<PencilIcon />} onClick={onEdit}>
+            {editLabel}
+          </SecondaryButton>
+          <PrimaryButton onClick={onNext}>Verify</PrimaryButton>
         </div>
-        <span className="top-spacer" />
-      </header>
-
-      <Stepper currentStep={2} />
-
-      <h2 className="measure-title">Dosage Calculation</h2>
-
-      {canCalculate ? (
-        <>
-          <div className="detail-table result-table">
-            <div className="detail-row">
-              <span className="detail-icon">
-                <PersonIcon />
-              </span>
-              <span className="detail-label">Patient Weight</span>
-              <span className="detail-value">{weight.toFixed(1)} kg</span>
+      }
+    >
+      <div className="hero-card">
+        <DrugHero drug={drug} sub={drug.concentrationLabel} />
+        <div className="dose-box" aria-live="polite">
+          <div className="dose-box-label">{isFluid ? "Bolus Volume" : "Volume to Draw"}</div>
+          <div className="dose-box-value">{fmtVolume(volumeMl)}</div>
+          {!isFluid && (
+            <div className="dose-box-sub">
+              Dose <strong>{fmtDose(dose, doseUnit)}</strong> at {drug.concentrationLabel}
             </div>
-            <div className="detail-row">
-              <span className="detail-icon">
-                <PillIcon />
-              </span>
-              <span className="detail-label">Medication</span>
-              <span className="detail-value">{med.name}</span>
+          )}
+          <div className="dose-box-sub">({formula})</div>
+          {(capped || adult || usedIdeal || patient.estimated) && (
+            <div className="badges">
+              {adult && <span className="badge">Adult dose (over 50 kg)</span>}
+              {capped && (
+                <span className="badge">
+                  Max dose applied ({drug.maxDose} {drug.unit})
+                </span>
+              )}
+              {usedIdeal && <span className="badge teal">Dosed on ideal weight</span>}
+              {patient.estimated && <span className="badge teal">Weight estimated from length</span>}
             </div>
-            <div className="detail-row">
-              <span className="detail-icon">
-                <FlaskIcon />
-              </span>
-              <span className="detail-label">Dose ({fmt(med.dosePerKgMg, 3)}mg/kg)</span>
-              <span className="detail-value">{fmt(doseMg, 3)} mg</span>
-            </div>
-            <div className="detail-row">
-              <span className="detail-icon">
-                <JarIcon />
-              </span>
-              <span className="detail-label">Concentration</span>
-              <span className="detail-value">{fmt(med.concentrationMgPerMl, 3)} mg/mL</span>
-            </div>
-          </div>
-
-          <div className="volume-box">
-            <span className="volume-icon">
-              <SyringeIcon />
-            </span>
-            <span className="volume-label">Volume to draw</span>
-            <span className="volume-value">{fmt(volumeMl)} mL</span>
-          </div>
-
-          <button className="next-btn calc-btn" onClick={() => onNext && onNext()}>
-            <span>Verify Dose</span>
-            <ArrowIcon />
-          </button>
-        </>
-      ) : (
-        <div className="result-notice" role="alert">
-          {method !== "weight"
-            ? "Dose calculation by length needs a length-to-weight reference, which hasn't been added yet. Please go back and enter the patient's weight."
-            : "Dose data for this medication isn't available yet."}
+          )}
         </div>
-      )}
-    </main>
+      </div>
+
+      <div className="notice info">
+        <InfoIcon />
+        <span>Double-check the dose, concentration, and route before administration.</span>
+      </div>
+    </Screen>
   );
 }

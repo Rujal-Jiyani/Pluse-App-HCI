@@ -1,140 +1,132 @@
-import React, { useState } from "react";
-import PulseLogo from "../components/PulseLogo.jsx";
-import Stepper from "../components/Stepper.jsx";
-
-function BackIcon() {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M20 12H4" />
-      <path d="m10 6-6 6 6 6" />
-    </svg>
-  );
-}
-
-function BackspaceIcon() {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6-7z" />
-      <path d="m12 9 6 6" />
-      <path d="m18 9-6 6" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 12h16" />
-      <path d="m14 6 6 6-6 6" />
-    </svg>
-  );
-}
+import React, { useEffect, useState } from "react";
+import Screen from "../components/Screen.jsx";
+import { PrimaryButton } from "../components/Buttons.jsx";
+import { BackspaceIcon, InfoIcon, WarningIcon } from "../components/Icons.jsx";
+import { LIMITS, validateMeasurement } from "../engine/validation.js";
 
 const KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "back"];
-const MAX_LENGTH = 6;
+const MAX_INT_DIGITS = 3;
+const MAX_DECIMALS = 1;
 
-export default function EnterMeasurement({
-  method = "weight",
-  initialValue = "",
-  onBack,
-  onNext,
-}) {
+// Keypad input rules prevent impossible values before validation runs.
+function applyKey(v, key) {
+  if (key === "back") return v.slice(0, -1);
+  const [int, dec] = v.split(".");
+  if (key === ".") {
+    if (v.includes(".")) return v;
+    return v === "" ? "0." : v + ".";
+  }
+  if (dec !== undefined) return dec.length >= MAX_DECIMALS ? v : v + key;
+  if (int === "0") return key; // no leading zeros
+  if (int.length >= MAX_INT_DIGITS) return v;
+  return v + key;
+}
+
+export default function EnterMeasurement({ method, initialValue = "", onBack, onHome, onNext }) {
   const [value, setValue] = useState(initialValue);
+  const [showError, setShowError] = useState(Boolean(initialValue));
   const isWeight = method === "weight";
-  const title = isWeight ? "Enter Patient Weight" : "Enter Patient Length";
+  const lim = LIMITS[method];
+  const v = validateMeasurement(method, value);
 
-  const press = (key) => {
-    if (key === "back") {
-      setValue((v) => v.slice(0, -1));
-      return;
-    }
-    setValue((v) => {
-      if (v.length >= MAX_LENGTH) return v;
-      if (key === ".") {
-        if (v.includes(".")) return v;
-        return v === "" ? "0." : v + ".";
-      }
-      // avoid leading zeros like "007"
-      if (v === "0") return key;
-      return v + key;
-    });
-  };
+  // Show range errors after a short pause, not while the user is mid-typing.
+  useEffect(() => {
+    setShowError(false);
+    if (!value) return undefined;
+    const t = setTimeout(() => setShowError(true), 600);
+    return () => clearTimeout(t);
+  }, [value]);
 
-  const numeric = parseFloat(value);
-  const canContinue = !Number.isNaN(numeric) && numeric > 0;
+  const press = (key) => setValue((cur) => applyKey(cur, key));
+
+  // Hardware keyboard support (useful for desktop demos / external keyboards).
+  useEffect(() => {
+    const onKey = (e) => {
+      if (/^[0-9]$/.test(e.key)) press(e.key);
+      else if (e.key === "." || e.key === ",") press(".");
+      else if (e.key === "Backspace") press("back");
+      else if (e.key === "Enter" && v.ok) onNext(String(v.value));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const error = showError ? v.error : null;
+  const unitWord = isWeight ? "kilograms (kg)" : "centimetres (cm)";
 
   return (
-    <main className="screen measure-screen">
-      <header className="top-bar">
-        <button className="back-btn" onClick={onBack} aria-label="Go back">
-          <BackIcon />
-        </button>
-        <div className="top-logo">
-          <PulseLogo />
-          <span>PULSE</span>
+    <Screen
+      onBack={onBack}
+      onHome={onHome}
+      step={0}
+      title={isWeight ? "Enter Patient Weight" : "Enter Patient Length"}
+      subtitle={
+        isWeight
+          ? `Enter the child's weight in ${unitWord}.`
+          : `Measure crown-to-heel lying flat. Enter in ${unitWord}.`
+      }
+      footer={
+        <PrimaryButton disabled={!v.ok} onClick={() => onNext(String(v.value))}>
+          Confirm
+        </PrimaryButton>
+      }
+    >
+      <div className="measure-layout">
+        <div className="measure-side">
+          <div className="measure-panel">
+            <label id="measure-label">{isWeight ? "Weight (kg)" : "Length (cm)"}</label>
+            <div
+              className={`measure-field ${error ? "invalid" : ""}`}
+              role="textbox"
+              aria-labelledby="measure-label"
+              aria-invalid={Boolean(error)}
+              aria-readonly="true"
+            >
+              <span className="measure-value" aria-live="polite">
+                {value === "" ? <span className="placeholder">0</span> : value}
+                <span className="caret" />
+              </span>
+              <span className="measure-unit">{lim.unit}</span>
+            </div>
+          </div>
+
+          {error ? (
+            <div className="notice error" role="alert">
+              <WarningIcon />
+              <span>
+                {error} Allowed range: {lim.min} – {lim.max} {lim.unit}.
+              </span>
+            </div>
+          ) : (
+            <div className="notice plain">
+              <InfoIcon />
+              <span>
+                Accepted range: {lim.min} – {lim.max} {lim.unit}
+              </span>
+            </div>
+          )}
+
+          {v.ok && v.warning && (
+            <div className="notice warning" role="status">
+              <WarningIcon />
+              <span>{v.warning}</span>
+            </div>
+          )}
         </div>
-        <span className="top-spacer" />
-      </header>
 
-      <Stepper currentStep={0} />
-
-      <h2 className="measure-title">{title}</h2>
-
-      <div className="measure-display" aria-live="polite">
-        {value === "" ? <span className="placeholder">0</span> : value}
+        <div className="keypad">
+          {KEYS.map((key) => (
+            <button
+              key={key}
+              className={`key ${key === "." || key === "back" ? "muted" : ""}`}
+              onClick={() => press(key)}
+              aria-label={key === "back" ? "Delete last digit" : key === "." ? "Decimal point" : key}
+            >
+              {key === "back" ? <BackspaceIcon /> : key}
+            </button>
+          ))}
+        </div>
       </div>
-
-      <div className="keypad">
-        {KEYS.map((key) => (
-          <button
-            key={key}
-            className="key"
-            onClick={() => press(key)}
-            aria-label={key === "back" ? "Delete" : key === "." ? "Decimal point" : key}
-          >
-            {key === "back" ? <BackspaceIcon /> : key}
-          </button>
-        ))}
-      </div>
-
-      <button
-        className="next-btn"
-        disabled={!canContinue}
-        onClick={() => onNext && onNext(numeric)}
-      >
-        <span>Next</span>
-        <ArrowIcon />
-      </button>
-    </main>
+    </Screen>
   );
 }
