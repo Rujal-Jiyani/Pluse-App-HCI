@@ -16,7 +16,7 @@ export default function VerifyDose({ result, onBack, onHome, onConfirm }) {
       subtitle="A second clinician must independently verify these details before administration."
       footer={
         <PrimaryButton icon={<CheckIcon />} arrow={false} onClick={onConfirm}>
-          Confirm
+          Verify as Second Clinician
         </PrimaryButton>
       }
     >

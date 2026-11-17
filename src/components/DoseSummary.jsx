@@ -13,7 +13,8 @@ import { patientText } from "./PatientChip.jsx";
 import { fmtDose, fmtVolume } from "../engine/units.js";
 
 // Read-only summary used on the Verify and Dose Confirmed pages.
-export default function DoseSummary({ result, verified = false }) {
+// volumeFirst puts "Volume to draw" at the top of the table (Dose Confirmed page).
+export default function DoseSummary({ result, verified = false, volumeFirst = false }) {
   const { drug, patient, dose, doseUnit, volumeMl } = result;
   const isFluid = drug.kind === "fluid";
   const rows = [
@@ -24,10 +25,19 @@ export default function DoseSummary({ result, verified = false }) {
     verified && { Icon: ShieldCheckIcon, label: "Verified By", value: "2 Clinicians", accent: true },
   ].filter(Boolean);
 
+  const volumeRow = (
+    <div className="summary-row highlight">
+      {isFluid ? <CalculatorIcon size={30} /> : <SyringeIcon size={32} />}
+      <span className="summary-label">{isFluid ? "Bolus volume" : "Volume to draw"}</span>
+      <span className="summary-value">{fmtVolume(volumeMl)}</span>
+    </div>
+  );
+
   return (
     <div className="hero-card">
       <DrugHero drug={drug} sub={drug.concentrationLabel} />
-      <div className="summary-table">
+      <div className={`summary-table ${volumeFirst ? "volume-first" : ""}`}>
+        {volumeFirst && volumeRow}
         {rows.map(({ Icon, label, value, accent }) => (
           <div key={label} className="summary-row">
             <Icon size={30} />
@@ -35,11 +45,7 @@ export default function DoseSummary({ result, verified = false }) {
             <span className={`summary-value ${accent ? "accent" : ""}`}>{value}</span>
           </div>
         ))}
-        <div className="summary-row highlight">
-          {isFluid ? <CalculatorIcon size={30} /> : <SyringeIcon size={32} />}
-          <span className="summary-label">{isFluid ? "Bolus volume" : "Volume to draw"}</span>
-          <span className="summary-value">{fmtVolume(volumeMl)}</span>
-        </div>
+        {!volumeFirst && volumeRow}
       </div>
     </div>
   );

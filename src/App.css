@@ -774,6 +774,22 @@ button {
   min-height: 84px;
 }
 
+/* Dose Confirmed: volume bar sits first, directly under the drug name */
+.summary-table.volume-first .summary-row.highlight {
+  margin-top: 0;
+  margin-bottom: 8px;
+  min-height: 96px;
+  border: 2px solid var(--primary-bright);
+}
+
+.summary-table.volume-first .summary-row.highlight .summary-value {
+  font-size: 44px;
+}
+
+.summary-table.volume-first .summary-row.highlight + .summary-row {
+  border-top: none;
+}
+
 .summary-row.highlight .summary-label {
   font-weight: 700;
   color: var(--primary-dark);
@@ -1164,6 +1180,7 @@ button {
 }
 
 .big-tick svg {
+  position: relative;
   width: 100%;
   height: 100%;
 }
@@ -1171,7 +1188,37 @@ button {
 .big-tick circle {
   fill: var(--success);
   transform-origin: center;
-  animation: pop 0.45s var(--ease) both;
+  animation: pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Expanding rings behind the tick, like a payment-success screen */
+.tick-ripple {
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: var(--success);
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  animation: ripple 0.9s 0.35s ease-out both;
+  pointer-events: none;
+}
+
+.tick-ripple.delay {
+  animation-delay: 0.6s;
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.7);
+    opacity: 0;
+  }
 }
 
 .big-tick path {
@@ -1191,7 +1238,19 @@ button {
   stroke-dasharray: none;
   stroke-dashoffset: 0;
   opacity: 0;
-  animation: fade 0.3s 0.55s forwards;
+  transform-origin: 60px 64px;
+  animation: burst 0.4s 0.55s var(--ease) forwards;
+}
+
+@keyframes burst {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes pop {
@@ -1449,5 +1508,8 @@ button {
   }
   .big-tick .ray {
     opacity: 1;
+  }
+  .tick-ripple {
+    display: none;
   }
 }

@@ -3,45 +3,43 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Patrick+Hand&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Patrick+Hand&family=Architects+Daughter&display=swap">
 <style>
-/* Layout: single reading column (~860px) with full-width storyboard grid; PULSE teal identity. */
+/* Layout: single reading column (~860px) with full-width storyboard grid.
+   Tokens copied from the PULSE app (src/App.css) so the report matches the website. */
 :root {
-  --bg: #f6f9f9;
+  --bg: #f7fafa;
   --paper: #ffffff;
+  --soft: #f2f6f6;
   --ink: #14282a;
-  --muted: #546b6d;
-  --line: #d6e3e3;
+  --muted: #536a6c;
+  --line: #dbe5e5;
+  --line-strong: #c5d4d4;
   --teal: #0f6b6e;
+  --teal-dark: #0b5558;
   --teal-bright: #1f9e93;
   --tint: #e2f1f0;
+  --tint-strong: #cfe7e5;
   --red: #c62f2a;
   --red-tint: #fdecea;
   --amber: #8a5a00;
   --amber-tint: #fdf3e1;
   --green: #1f8a5b;
+  --radius: 20px;
+  --radius-sm: 14px;
+  --shadow: 0 2px 10px rgba(15, 107, 110, 0.06);
   --skin: #f2c9a5;
   --skin2: #c98e63;
   --coat: #ffffff;
   --scrub: #2f8f8a;
   --hair: #2b2321;
   --bed: #cfdede;
-  --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --display: "Inter", "Segoe UI", system-ui, sans-serif;
   --body: "Inter", "Segoe UI", system-ui, sans-serif;
   --hand: "Patrick Hand", "Comic Sans MS", "Segoe Print", cursive;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0e1717; --paper: #152222; --ink: #e4efef; --muted: #9bb3b4; --line: #2a3d3d;
-    --teal: #4fc3b8; --teal-bright: #5fd6c9; --tint: #183434; --red: #ff7a72; --red-tint: #3a1c1b;
-    --amber: #f0c26a; --amber-tint: #33280f; --green: #4fd08f; --bed: #2b4141; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0e1717; --paper: #152222; --ink: #e4efef; --muted: #9bb3b4; --line: #2a3d3d;
-  --teal: #4fc3b8; --teal-bright: #5fd6c9; --tint: #183434; --red: #ff7a72; --red-tint: #3a1c1b;
-  --amber: #f0c26a; --amber-tint: #33280f; --green: #4fd08f; --bed: #2b4141; color-scheme: dark;
-}
+/* Single light theme on purpose: matches the PULSE app and prints cleanly. */
+:root { color-scheme: light; }
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
@@ -49,28 +47,34 @@ body {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-.wrap { max-width: 1040px; margin: 0 auto; padding-block: 40px 64px; }
+.wrap { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding-block: 28px 64px; }
+.wave { position: fixed; right: 0; bottom: 0; width: min(55vw, 460px); height: 200px; z-index: 0; pointer-events: none; }
+.wave path { fill: var(--tint); opacity: .8; }
+.brandbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 20px; margin-bottom: 8px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 28px var(--display); letter-spacing: .5px; color: var(--ink); }
+.brand svg { width: 56px; height: auto; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--tint); color: var(--teal-dark); font-size: 14px; font-weight: 600; }
 .col { max-width: 860px; }
-h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
-h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: -0.5px; }
-h2 { font-size: 28px; margin-bottom: 6px; }
-h3 { font-size: 19px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 5vw, 40px); letter-spacing: -0.3px; }
+h2 { font-size: 30px; letter-spacing: -0.3px; margin-bottom: 6px; }
+h3 { font-size: 19px; font-weight: 700; }
 p { margin: 0; }
-.eyebrow { font: 600 13px var(--body); letter-spacing: 1.4px; text-transform: uppercase; color: var(--teal); }
+.eyebrow { font: 700 13px var(--body); letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 .lede { color: var(--muted); font-size: 18px; max-width: 65ch; margin-top: 10px; }
-header.top { display: flex; flex-direction: column; gap: 8px; padding-bottom: 28px; border-bottom: 2px solid var(--line); }
+header.top { display: flex; flex-direction: column; gap: 10px; padding-bottom: 28px; border-bottom: 2px solid var(--line); }
 .meta { color: var(--muted); font-size: 14px; }
 section { padding-top: 44px; display: flex; flex-direction: column; gap: 18px; }
 .section-intro { color: var(--muted); max-width: 70ch; }
 nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-nav.toc a { font-size: 14px; font-weight: 600; color: var(--teal); text-decoration: none; padding: 6px 12px; border: 1.5px solid var(--line); border-radius: 999px; }
-nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--teal); }
+nav.toc a { font-size: 14px; font-weight: 600; color: var(--teal-dark); text-decoration: none; padding: 9px 16px; background: var(--paper); border: 2px solid var(--line); border-radius: 999px; box-shadow: var(--shadow); transition: border-color .15s, background .15s; }
+nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--teal); background: var(--tint); }
 :focus-visible { outline: 3px solid var(--teal-bright); outline-offset: 2px; }
 
 /* Goals */
 .goals { display: grid; gap: 14px; }
-.goal { background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px; padding: 18px 20px; display: grid; grid-template-columns: 44px 1fr; gap: 16px; }
-.goal .n { width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--teal); font: 700 20px var(--display); display: grid; place-items: center; }
+.goal { background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px; display: grid; grid-template-columns: 44px 1fr; gap: 16px; }
+.goal .n { width: 44px; height: 44px; border-radius: 50%; background: var(--teal); color: #fff; box-shadow: 0 0 0 6px var(--tint); font: 800 19px var(--display); display: grid; place-items: center; }
 .goal-body { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 .goal .why { color: var(--muted); font-size: 15px; }
 .goal .why q { font-style: italic; }
@@ -81,7 +85,7 @@ nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--teal); }
 .kv li + li { margin-top: 2px; }
 
 /* Tables */
-.table-wrap { overflow-x: auto; border: 1.5px solid var(--line); border-radius: 14px; background: var(--paper); }
+.table-wrap { overflow-x: auto; border: 2px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); }
 table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 15px; }
 th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-top: 1px solid var(--line); }
 thead th { border-top: none; font: 600 12px var(--body); letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--tint); }
@@ -95,7 +99,7 @@ td.scr span { display: block; font-weight: 500; color: var(--muted); font-size: 
 
 /* Feedback states */
 .states { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.state { background: var(--paper); border: 1.5px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.state { background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .state h3 { display: flex; align-items: center; gap: 10px; }
 .state .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 .state.wait .dot { background: var(--teal-bright); }
@@ -107,9 +111,9 @@ td.scr span { display: block; font-weight: 500; color: var(--muted); font-size: 
 
 /* Storyboard */
 .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-.panel { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
-.panel svg { display: block; width: 100%; height: auto; max-width: 100%; background: var(--tint); border-bottom: 2.5px solid var(--ink); }
-.cap { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+.panel { background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.panel svg { display: block; width: 100%; height: auto; max-width: 100%; background: var(--tint); border-bottom: 2px solid var(--line); }
+.cap { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
 .cap .t { font: 700 13px var(--body); color: var(--teal); letter-spacing: .5px; }
 .cap .h { font: 700 16px var(--display); }
 .cap p { font-size: 14px; color: var(--muted); }
@@ -119,7 +123,26 @@ td.scr span { display: block; font-weight: 500; color: var(--muted); font-size: 
 .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
 .legend .l1::before { background: var(--teal-bright); } .legend .l2::before { background: var(--red); } .legend .l3::before { background: var(--green); }
 
-.callout { background: var(--amber-tint); color: var(--ink); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+/* Paper prototype */
+.howto { background: var(--paper); border: 2px dashed var(--line-strong); border-radius: var(--radius); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.howto ul { margin: 0; padding-left: 18px; font-size: 15px; }
+.howto li + li { margin-top: 6px; }
+.frames-head { margin-top: 8px; }
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
+.frame { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.frame svg { display: block; width: 100%; height: auto; max-width: 100%; background: #fffdf8; border-radius: var(--radius-sm); border: 2px solid var(--line); box-shadow: var(--shadow); }
+.frame .lbl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.frame .id { font: 700 15px var(--display); }
+.frame .kind { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--tint); color: var(--teal); }
+.frame .kind.err { background: var(--red-tint); color: var(--red); }
+.frame .kind.warn { background: var(--amber-tint); color: var(--amber); }
+.frame .kind.done { background: var(--tint); color: var(--green); }
+.frame figcaption p { font-size: 14px; color: var(--muted); }
+.frame .when { font-size: 13px; color: var(--ink); }
+.frame .when b { color: var(--teal); }
+.legend .l4::before { background: var(--amber); }
+
+.callout { background: var(--amber-tint); color: var(--ink); border-radius: var(--radius-sm); padding: 14px 16px; font-size: 15px; }
 .callout strong { color: var(--amber); }
 footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line); color: var(--muted); font-size: 14px; }
 
@@ -129,7 +152,15 @@ footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line);
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 
+<svg class="wave" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 200 C 120 200 160 120 260 90 S 380 40 400 30 L 400 200 Z"/></svg>
 <div class="wrap">
+  <div class="brandbar">
+    <div class="brand">
+      <svg viewBox="0 0 120 80" fill="none" aria-hidden="true"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4fd1c5"/><stop offset="100%" stop-color="#1fb5a8"/></linearGradient></defs><path d="M6 38 H30 L42 34 L54 8 L68 70 L80 30 L90 38 H114" stroke="url(#pg)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>PULSE</span>
+    </div>
+    <span class="chip">Week 2 · Paper prototype</span>
+  </div>
   <header class="top col">
     <span class="eyebrow">IE403 Human Computer Interaction · Week 2 · Paper prototype</span>
     <h1>PULSE: Pediatric Emergency Dosage &amp; Resuscitation Tablet</h1>
@@ -137,9 +168,10 @@ footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line);
     <p class="lede">Week 2 builds on our needfinding: ER teams must turn an unknown child's size into an exact syringe volume within seconds, with gloves on and a second person checking. Below are our design goals, a critique of our first screen sketches, and a storyboard of the full task.</p>
     <nav class="toc" aria-label="Contents">
       <a href="#goals">1. Goals</a>
-      <a href="#feedback">2. Feedback on initial design</a>
-      <a href="#consistency">3. Labels &amp; buttons</a>
-      <a href="#storyboard">4. Storyboard</a>
+      <a href="#paper">2. Paper prototype</a>
+      <a href="#feedback">3. Feedback on initial design</a>
+      <a href="#consistency">4. Labels &amp; buttons</a>
+      <a href="#storyboard">5. Storyboard</a>
     </nav>
   </header>
 
@@ -250,6 +282,33 @@ footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line);
         </div>
       </article>
     </div>
+  </section>
+
+  <!-- ============ PAPER PROTOTYPE ============ -->
+  <section id="paper">
+    <div class="col">
+      <span class="eyebrow">Step 2</span>
+      <h2>Hand-drawn paper prototype</h2>
+      <p class="section-intro">Our original 8 frames, redrawn as paper screens, plus the error and feedback screens they were missing. Each added frame says when the "computer" (the team member swapping papers) should show it during testing.</p>
+    </div>
+
+    <div class="howto col">
+      <h3>How to make it by hand</h3>
+      <ul>
+        <li><strong>One card per frame.</strong> Draw each screen on an A5 card or index card in pencil, then go over it in black pen.</li>
+        <li><strong>Marker colours carry meaning.</strong> Teal for the main button and selected items, red for errors, amber for warnings, green for success. Use the same colours on every card.</li>
+        <li><strong>Messages are sticky notes.</strong> Draw each error or warning strip on a small sticky note and stick it over the base screen when the tester makes that mistake, so you don't redraw the whole screen.</li>
+        <li><strong>Disabled buttons</strong> are drawn in grey pencil only. Swap to the teal version once the input is valid.</li>
+        <li><strong>The "Leave this calculation?" dialog</strong> is a separate small card laid on top of whatever screen is showing.</li>
+      </ul>
+    </div>
+
+    <h3 class="col frames-head">Original frames (1–8)</h3>
+    <div class="frames" id="frames-orig"></div>
+
+    <h3 class="col frames-head">Added error &amp; feedback frames</h3>
+    <div class="legend"><span class="l2">Error: must be fixed</span><span class="l4">Warning: a rule changes the dose</span><span class="l1">Wait / new step</span><span class="l3">Finish</span></div>
+    <div class="frames" id="frames-new"></div>
   </section>
 
   <!-- ============ FEEDBACK ============ -->
@@ -485,13 +544,13 @@ footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line);
     },
     {
       t: "4:06 PM", h: "A gloved slip", fb: ["err", "Error: red field + how to fix it"],
-      p: "Her gloved finger hits 0 twice: 980 cm. The field turns red: \"Maximum length is 150 cm.\" Confirm stays grey. One tap on delete fixes it.",
+      p: "Her gloved finger hits 8 twice: 988 cm. The field turns red: \"Maximum length is 150 cm.\" Confirm stays grey. One tap on delete fixes it.",
       svg: () => S`
         ${tablet(40, 26, 170, 196, S`
           ${steps(0)}
           ${T(79, 30, "Enter Patient Length", { size: 9, w: 800, anchor: "middle" })}
           <rect x="10" y="38" width="138" height="30" rx="4" fill="#fff" stroke="#c62f2a" stroke-width="2"/>
-          ${T(20, 60, "980", { size: 18, w: 800 })}${T(130, 58, "cm", { size: 9, c: "#536a6c" })}
+          ${T(20, 60, "988", { size: 18, w: 800 })}${T(130, 58, "cm", { size: 9, c: "#536a6c" })}
           <rect x="10" y="73" width="138" height="20" rx="3" fill="#fdecea"/>
           ${T(16, 82, "⚠ Maximum length is 150 cm.", { size: 6.5, c: "#c62f2a", w: 700 })}${T(16, 90, "Allowed range: 30 – 150 cm.", { size: 6.5, c: "#c62f2a" })}
           ${[0, 1, 2].map((r) => [0, 1, 2].map((c) => `<rect x="${12 + c * 46}" y="${99 + r * 18}" width="42" height="15" rx="3" fill="#fff" stroke="#dbe5e5"/>`).join("")).join("")}
@@ -595,11 +654,275 @@ footer { margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--line);
     <figure class="panel" style="margin:0">
       <svg viewBox="0 0 320 240" role="img" aria-label="Panel ${i + 1}: ${pn.h}">${pn.svg()}</svg>
       <figcaption class="cap">
-        <span class="t">${i + 1} · ${pn.t}</span>
         <span class="h">${pn.h}</span>
         <p>${pn.p}</p>
-        <span class="fb ${pn.fb[0]}">● ${pn.fb[1]}</span>
       </figcaption>
     </figure>`).join("");
+})();
+</script>
+
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  const INK = "#2b2b2b", TEAL = "#0f6b6e", TINT = "#d7eeec", RED = "#c62f2a", RED_T = "#fde3e1",
+        AMB = "#b7791f", AMB_T = "#fcefd0", GREEN = "#1f8a5b", GREY = "#e3e7e7", GREY_INK = "#8a9a9a";
+  const HAND = "'Architects Daughter', 'Patrick Hand', 'Comic Sans MS', cursive";
+
+  function kit(svg, seed) {
+    const rc = window.rough ? window.rough.svg(svg, { options: { seed, roughness: 1.05, bowing: 1.1, stroke: INK, strokeWidth: 1.3 } }) : null;
+    const add = (el) => (svg.appendChild(el), el);
+    const plain = (tag, a) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); return add(e); };
+    const solid = (o) => (o.fill && !o.fillStyle ? Object.assign({ fillStyle: "solid" }, o) : o);
+    return {
+      R(x, y, w, h, o = {}) {
+        if (rc) return add(rc.rectangle(x, y, w, h, solid(o)));
+        return plain("rect", { x, y, width: w, height: h, rx: 3, fill: o.fill || "none", stroke: o.stroke || INK, "stroke-width": o.strokeWidth || 1.3 });
+      },
+      L(x1, y1, x2, y2, o = {}) {
+        if (rc) return add(rc.line(x1, y1, x2, y2, o));
+        return plain("line", { x1, y1, x2, y2, stroke: o.stroke || INK, "stroke-width": o.strokeWidth || 1.3 });
+      },
+      C(cx, cy, dia, o = {}) {
+        if (rc) return add(rc.circle(cx, cy, dia, solid(o)));
+        return plain("circle", { cx, cy, r: dia / 2, fill: o.fill || "none", stroke: o.stroke || INK, "stroke-width": o.strokeWidth || 1.3 });
+      },
+      P(path, o = {}) {
+        if (rc) return add(rc.path(path, solid(o)));
+        return plain("path", { d: path, fill: o.fill || "none", stroke: o.stroke || INK, "stroke-width": o.strokeWidth || 1.3 });
+      },
+      T(x, y, s, o = {}) {
+        const t = plain("text", {
+          x, y, "font-family": HAND, "font-size": o.size || 10, fill: o.color || INK,
+          "font-weight": o.bold ? 700 : 400, "text-anchor": o.anchor || "start",
+        });
+        t.textContent = s;
+        return t;
+      },
+    };
+  }
+
+  // ---------- shared pieces ----------
+  function screen(d) { d.R(4, 4, 192, 332, { strokeWidth: 1.8 }); }
+  function topBar(d, o = {}) {
+    if (o.back !== false) d.T(14, 30, "←", { size: 18 });
+    if (o.home) d.T(172, 30, "⌂", { size: 18 });
+    d.P("M60 24 h10 l4 -7 l5 15 l4 -9 h8", { stroke: TEAL, strokeWidth: 2 });
+    d.T(94, 29, "PULSE", { size: 14, bold: true });
+  }
+  function stepper(d, n) {
+    const xs = [45, 100, 155], labels = ["Patient", "Medication", "Result"];
+    d.L(45, 50, 155, 50, { stroke: "#99aaaa" });
+    xs.forEach((x, i) => {
+      d.C(x, 50, 11, i <= n ? { fill: TEAL, stroke: TEAL } : { fill: "#ffffff", stroke: "#99aaaa" });
+      if (i < n) d.T(x, 53.5, "✓", { size: 8, color: "#ffffff", anchor: "middle", bold: true });
+      d.T(x, 68, labels[i], { size: 8.5, anchor: "middle", color: i === Math.min(n, 2) ? INK : "#777777" });
+    });
+  }
+  function title(d, lines, y = 92, size = 13) {
+    lines.forEach((l, i) => d.T(100, y + i * 16, l, { size, anchor: "middle", bold: true }));
+  }
+  function button(d, y, label, kind = "on", x = 40, w = 120) {
+    if (kind === "off") d.R(x, y, w, 26, { fill: GREY, stroke: "#aaaabb" });
+    else if (kind === "outline") d.R(x, y, w, 26, {});
+    else if (kind === "danger") d.R(x, y, w, 26, { fill: RED, stroke: RED });
+    else d.R(x, y, w, 26, { fill: TEAL, stroke: TEAL });
+    const c = kind === "off" ? GREY_INK : kind === "outline" ? INK : "#ffffff";
+    d.T(x + w / 2, y + 17, label, { size: 11.5, anchor: "middle", color: c, bold: kind !== "off" });
+  }
+  function input(d, y, val, unit, state) {
+    const st = state === "err" ? { stroke: RED, strokeWidth: 2.4 } : state === "warn" ? { stroke: AMB, strokeWidth: 2.2 } : {};
+    d.R(30, y, 140, 32, st);
+    d.T(92, y + 23, val || "0", { size: 19, anchor: "middle", color: val ? INK : "#b5b5b5", bold: true });
+    d.T(150, y + 22, unit, { size: 11, anchor: "middle", color: "#666666" });
+  }
+  function note(d, y, lines, kind) {
+    const map = { err: [RED_T, RED, "⚠ "], warn: [AMB_T, AMB, "⚠ "], info: ["#eef3f3", "#7a8b8c", "ⓘ "] };
+    const [fill, stroke, icon] = map[kind];
+    const h = lines.length * 13 + 9;
+    d.R(20, y, 160, h, { fill, stroke });
+    lines.forEach((l, i) => d.T(27, y + 15 + i * 13, (i === 0 ? icon : "   ") + l, { size: 9.5, color: kind === "info" ? "#555555" : stroke, bold: kind !== "info" }));
+  }
+  function keypad(d, y0) {
+    const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "⌫"];
+    keys.forEach((k, i) => {
+      const x = 34 + (i % 3) * 46, y = y0 + Math.floor(i / 3) * 26;
+      d.R(x, y, 40, 21, {});
+      d.T(x + 20, y + 15, k, { size: 12, anchor: "middle" });
+    });
+  }
+  function entry(d, o) {
+    screen(d); topBar(d, { home: o.home }); stepper(d, 0);
+    title(d, [o.title], 90, 12.5);
+    input(d, 98, o.val, o.unit, o.state);
+    if (o.note) note(d, 136, o.note, o.state || "info");
+    keypad(d, 184);
+    button(d, 298, "Next  →", o.next === false ? "off" : "on");
+  }
+  function table(d, y, rows, o = {}) {
+    const rh = o.rh || 30;
+    d.R(18, y, 164, rows.length * rh, {});
+    rows.forEach((r, i) => {
+      const ry = y + i * rh;
+      if (i) d.L(22, ry, 178, ry, { stroke: "#bbbbbb", strokeWidth: 0.8 });
+      if (r.hl) d.R(20, ry + 2, 160, rh - 4, { fill: TINT, stroke: TEAL });
+      d.T(26, ry + rh / 2 + 4, (r.warn ? "⚠ " : "") + r.k, { size: 9.5, bold: true, color: r.warn ? RED : INK });
+      d.T(174, ry + rh / 2 + 4, r.v, { size: r.hl ? 13 : 9, anchor: "end", bold: !!r.hl, color: r.hl ? TEAL : "#444444" });
+    });
+  }
+  const resultRows = (w, med, rule, dose, conc) => [
+    { k: "Patient Weight", v: w }, { k: "Medication", v: med },
+    { k: "Dose (" + rule + ")", v: dose }, { k: "Concentration", v: conc },
+  ];
+
+  // ---------- original frames ----------
+  const ORIGINAL = [
+    { id: "Frame 1", name: "Emergency Dashboard", draw(d) {
+      screen(d);
+      d.P("M32 92 h22 l7 -14 l9 28 l8 -18 h16", { stroke: TEAL, strokeWidth: 3 });
+      d.T(96, 100, "PULSE", { size: 30, bold: true });
+      d.T(100, 126, "Pediatric Emergency", { size: 10, anchor: "middle" });
+      d.T(100, 140, "Dosage & Resuscitation Assistant", { size: 10, anchor: "middle" });
+      d.R(22, 166, 156, 34, { fill: TEAL, stroke: TEAL });
+      d.T(100, 188, "Start Emergency Session", { size: 11, anchor: "middle", color: "#ffffff", bold: true });
+      d.R(22, 226, 72, 72, {}); d.R(106, 226, 72, 72, {});
+      d.P("M46 246 h10 q4 0 4 4 v16 q0 -3 -4 -3 h-10 z M74 246 h-10 q-4 0 -4 4 v16 q0 -3 4 -3 h10 z", { stroke: TEAL });
+      d.T(58, 280, "Medication", { size: 9, anchor: "middle" }); d.T(58, 291, "Reference", { size: 9, anchor: "middle" });
+      d.P("M142 242 l-9 4 v8 q0 9 9 13 q9 -4 9 -13 v-8 z", { stroke: TEAL });
+      d.T(142, 280, "Protocols &", { size: 9, anchor: "middle" }); d.T(142, 291, "Guidelines", { size: 9, anchor: "middle" });
+    }, cap: "Entry point. One large Start button; reference and guidelines below." },
+    { id: "Frame 2", name: "Measurement Method", draw(d) {
+      screen(d); topBar(d);
+      title(d, ["Select Patient", "Measurement Method"], 74, 13);
+      d.R(22, 112, 156, 52, { fill: TINT, stroke: TEAL });
+      d.R(34, 124, 26, 26, {}); d.T(112, 143, "By Weight (kg)", { size: 11.5, anchor: "middle", bold: true });
+      d.R(22, 180, 156, 52, {});
+      d.P("M36 220 l22 -22 l8 8 l-22 22 z", {}); d.T(112, 211, "By Length (cm)", { size: 11.5, anchor: "middle", bold: true });
+    }, cap: "Choose weight or length. Weight looked pre-selected; fixed later." },
+    { id: "Frame 3", name: "Enter Weight", draw(d) { entry(d, { title: "Enter Patient Weight", val: "15", unit: "kg" }); }, cap: "Keypad entry of weight in kg." },
+    { id: "Frame 4", name: "Enter Length", draw(d) { entry(d, { title: "Enter Patient Length", val: "110", unit: "cm" }); }, cap: "Keypad entry of length in cm." },
+    { id: "Frame 5", name: "Select Medication", draw(d) {
+      screen(d); topBar(d); stepper(d, 1); title(d, ["Select Medication"], 92);
+      ["Epinephrine", "Atropine", "Amiodarone", "Fluids"].forEach((m, i) => {
+        d.R(28, 108 + i * 42, 144, 32, { fill: "#eef1f1" });
+        d.T(100, 129 + i * 42, m, { size: 11.5, anchor: "middle", bold: true });
+      });
+    }, cap: "Pick one crash-cart drug." },
+    { id: "Frame 6", name: "Medication Details", draw(d) {
+      screen(d); topBar(d); stepper(d, 1); title(d, ["Epinephrine"], 92);
+      table(d, 104, [
+        { k: "Indication", v: "Cardiac arrest" }, { k: "Dose", v: "0.01 mg/kg IV/IO" },
+        { k: "Concentration", v: "0.1 mg/mL" }, { k: "Precaution", v: "Monitor HR", warn: true },
+      ], { rh: 36 });
+      button(d, 270, "Calculate Dose  →", "on", 30, 140);
+    }, cap: "Drug facts before calculating." },
+    { id: "Frame 7", name: "Dosage Calculation", draw(d) {
+      screen(d); topBar(d); stepper(d, 2); title(d, ["Dosage Calculation"], 92);
+      table(d, 104, resultRows("15.0 kg", "Epinephrine", "0.01mg/kg", "0.15 mg", "0.1 mg/mL"), { rh: 30 });
+      d.R(18, 238, 164, 34, { fill: TINT, stroke: TEAL });
+      d.T(28, 260, "Volume to draw", { size: 10.5, bold: true }); d.T(172, 261, "1.5 mL", { size: 15, anchor: "end", bold: true, color: TEAL });
+    }, cap: "Calculated dose and volume." },
+    { id: "Frame 8", name: "Verify Before Administration", draw(d) {
+      screen(d); topBar(d); stepper(d, 3); title(d, ["Verify Before", "Administration"], 88, 12);
+      table(d, 112, [...resultRows("15.0 kg", "Epinephrine", "0.01mg/kg", "0.15 mg", "0.1 mg/mL"), { k: "Volume to draw", v: "1.5 mL", hl: true }], { rh: 28 });
+      button(d, 296, "✎ Edit", "outline", 22, 72); button(d, 296, "✓ Confirm", "on", 104, 74);
+    }, cap: "Cross-check and confirm." },
+  ];
+
+  // ---------- added error & feedback frames ----------
+  const ADDED = [
+    { id: "Frame 3a", kind: ["wait", "Wait"], name: "Weight: nothing entered", draw(d) {
+      entry(d, { title: "Enter Patient Weight (kg)", val: "", unit: "kg", home: true, note: ["Accepted range: 0.5 – 150 kg"], next: false });
+    }, when: "Screen opens, or the field is empty.", cap: "Range is shown before typing; Next stays grey until a valid value is entered." },
+    { id: "Frame 3b", kind: ["err", "Error"], name: "Weight too low", draw(d) {
+      entry(d, { title: "Enter Patient Weight (kg)", val: "0.2", unit: "kg", home: true, note: ["Minimum weight is 0.5 kg.", "Allowed: 0.5 – 150 kg"], state: "err", next: false });
+    }, when: "Tester types a value below 0.5 kg (e.g. 0.2).", cap: "Red border and a message saying how to fix it. Catches decimal slips." },
+    { id: "Frame 3c", kind: ["err", "Error"], name: "Weight too high", draw(d) {
+      entry(d, { title: "Enter Patient Weight (kg)", val: "250", unit: "kg", home: true, note: ["Maximum weight is 150 kg.", "Allowed: 0.5 – 150 kg"], state: "err", next: false });
+    }, when: "Tester types more than 150 kg (e.g. 250).", cap: "Impossible values are blocked; Next stays grey." },
+    { id: "Frame 3d", kind: ["warn", "Warning"], name: "Adult weight", draw(d) {
+      entry(d, { title: "Enter Patient Weight (kg)", val: "62", unit: "kg", home: true, note: ["Over 50 kg: adult doses", "will be used."], state: "warn" });
+    }, when: "Tester enters more than 50 kg.", cap: "Allowed, but warns that the adult dose will be used. Next stays active." },
+    { id: "Frame 4a", kind: ["err", "Error"], name: "Length out of range", draw(d) {
+      entry(d, { title: "Enter Patient Length (cm)", val: "980", unit: "cm", home: true, note: ["Maximum length is 150 cm.", "Allowed: 30 – 150 cm"], state: "err", next: false });
+    }, when: "Tester double-taps a key (98 → 980) or types below 30 cm.", cap: "Same error pattern as weight, with the length range." },
+    { id: "Frame 4b", kind: ["wait", "New step"], name: "Body build (length only)", draw(d) {
+      screen(d); topBar(d, { home: true }); stepper(d, 0);
+      title(d, ["Select Body Build"], 90, 12.5); d.T(100, 106, "Length 110 cm", { size: 9.5, anchor: "middle", color: "#666666" });
+      [["Underweight", "(Malnourished)", "15.9 kg"], ["Normal", "(Healthy)", "18.8 kg"], ["Overweight", "(Obese)", "22.5 kg"]].forEach((b, i) => {
+        const y = 118 + i * 66;
+        d.R(20, y, 160, 56, {});
+        const w = [7, 11, 17][i];
+        d.C(42, y + 13, 9, { fill: INK }); d.R(42 - w / 2, y + 19, w, 18, { fill: INK }); d.L(39, y + 37, 39, y + 50); d.L(45, y + 37, 45, y + 50);
+        d.T(64, y + 22, b[0], { size: 11.5, bold: true }); d.T(64, y + 34, b[1], { size: 9, color: TEAL });
+        d.T(64, y + 48, "est. " + b[2], { size: 9.5, color: "#555555" });
+        d.T(170, y + 33, "›", { size: 16, anchor: "end" });
+      });
+    }, when: "After a valid length, before medication.", cap: "Length alone can't give a dose. Each option shows its estimated weight first." },
+    { id: "Frame 7a", kind: ["warn", "Warning"], name: "Maximum dose applied", draw(d) {
+      screen(d); topBar(d, { home: true }); stepper(d, 2); title(d, ["Dosage Calculation"], 92);
+      table(d, 104, resultRows("30.0 kg", "Atropine", "0.02mg/kg", "0.5 mg", "0.1 mg/mL"), { rh: 26 });
+      note(d, 212, ["Max dose applied: 0.5 mg", "(0.02 × 30 = 0.6 mg)"], "warn");
+      d.R(18, 254, 164, 30, { fill: TINT, stroke: TEAL });
+      d.T(28, 274, "Volume to draw", { size: 10.5, bold: true }); d.T(172, 275, "5 mL", { size: 15, anchor: "end", bold: true, color: TEAL });
+      button(d, 298, "✎ Edit weight", "outline", 18, 74); button(d, 298, "Verify  →", "on", 100, 82);
+    }, when: "Dose per kg × weight is above the drug's maximum.", cap: "Dose is capped and the note explains why, so the number isn't a surprise." },
+    { id: "Frame 8a", kind: ["err", "Prevent"], name: "Leave this calculation?", draw(d) {
+      screen(d); topBar(d, { home: true }); stepper(d, 3); title(d, ["Second Clinician", "Verification"], 88, 12);
+      table(d, 112, [...resultRows("15.0 kg", "Epinephrine", "0.01mg/kg", "0.15 mg", "0.1 mg/mL"), { k: "Volume to draw", v: "1.5 mL", hl: true }], { rh: 28 });
+      d.R(8, 8, 184, 324, { fill: "#7a8585", stroke: "none", fillStyle: "hachure", hachureGap: 6, fillWeight: 0.6 });
+      d.R(18, 120, 164, 112, { fill: "#ffffff" });
+      d.T(100, 146, "Leave this calculation?", { size: 12, anchor: "middle", bold: true });
+      d.T(100, 166, "Entered patient details and", { size: 9, anchor: "middle", color: "#555555" });
+      d.T(100, 178, "medication will be cleared.", { size: 9, anchor: "middle", color: "#555555" });
+      button(d, 196, "Stay", "outline", 28, 66); button(d, 196, "Leave", "danger", 106, 66);
+    }, when: "Tester taps Home (⌂) mid-session.", cap: "Asks before throwing away data. Stay is the safe choice." },
+    { id: "Frame 9", kind: ["done", "Finish"], name: "Dose Confirmed", draw(d) {
+      screen(d); topBar(d, { home: true, back: false }); stepper(d, 3);
+      d.C(100, 110, 46, { fill: GREEN, stroke: GREEN });
+      d.P("M88 110 l8 8 l16 -18", { stroke: "#ffffff", strokeWidth: 3.2 });
+      d.L(70, 82, 76, 88, { stroke: TEAL }); d.L(130, 82, 124, 88, { stroke: TEAL });
+      title(d, ["Dose Confirmed"], 154, 15);
+      table(d, 166, [
+        { k: "Patient Weight", v: "15.0 kg" }, { k: "Epinephrine", v: "0.15 mg" },
+        { k: "Concentration", v: "0.1 mg/mL" }, { k: "Verified by", v: "2 clinicians" },
+        { k: "Volume to draw", v: "1.5 mL", hl: true },
+      ], { rh: 28 });
+    }, when: "Second clinician taps Confirm.", cap: "Clear end of task: big tick, full summary, volume in bold. Home starts the next drug." },
+  ];
+
+  function render(list, hostId, offset) {
+    const host = document.getElementById(hostId);
+    list.forEach((f, i) => {
+      const fig = document.createElement("figure");
+      fig.className = "frame";
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", "0 0 200 340");
+      svg.setAttribute("role", "img");
+      svg.setAttribute("aria-label", f.id + ": " + f.name);
+      fig.appendChild(svg);
+      const cap = document.createElement("figcaption");
+      cap.innerHTML =
+        '<div class="lbl"><span class="id">' + f.id + "</span>" + (f.kind ? '<span class="kind ' + f.kind[0] + '">' + f.kind[1] + "</span>" : "") + "</div>" +
+        "<p><strong>" + f.name + ".</strong> " + f.cap + "</p>" +
+        (f.when ? '<p class="when"><b>Show when:</b> ' + f.when + "</p>" : "");
+      fig.appendChild(cap);
+      host.appendChild(fig);
+      try { f.draw(kit(svg, offset + i + 1)); } catch (e) { console.error(f.id, e); }
+    });
+  }
+  // Draw once, with rough.js for the hand-drawn look, or plain SVG if it can't load.
+  let done = false;
+  function start() {
+    if (done) return;
+    done = true;
+    render(ORIGINAL, "frames-orig", 10);
+    render(ADDED, "frames-new", 40);
+  }
+  const lib = document.createElement("script");
+  lib.src = "https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js";
+  lib.onload = start;
+  lib.onerror = start;
+  document.head.appendChild(lib);
+  setTimeout(start, 2500);
 })();
 </script>

@@ -1,0 +1,214 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Packages ----------
+\usepackage[a4paper,margin=2.1cm,top=1.9cm,bottom=1.9cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+% ---------- Colours (PULSE app theme) ----------
+\definecolor{pulseteal}{HTML}{0F6B6E}
+\definecolor{pulseink}{HTML}{14282A}
+\definecolor{pulsemuted}{HTML}{536A6C}
+\definecolor{pulseline}{HTML}{DBE5E5}
+\definecolor{pulsetint}{HTML}{E2F1F0}
+
+% ---------- Headings ----------
+\titleformat{\section}{\Large\bfseries\color{pulseink}}{\thesection.}{0.6em}{}[\vspace{2pt}{\color{pulseline}\titlerule[1pt]}]
+\titleformat{\subsection}{\large\bfseries\color{pulseteal}}{}{0em}{}
+\titlespacing*{\section}{0pt}{14pt}{8pt}
+\titlespacing*{\subsection}{0pt}{9pt}{2pt}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=1pt, topsep=2pt}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=2pt, topsep=2pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\arraystretch}{1.35}
+
+% ---------- Header / footer ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{pulsemuted}IE403 Human Computer Interaction}
+\fancyhead[R]{\small\color{pulsemuted}PULSE -- Week 2}
+\fancyfoot[C]{\small\color{pulsemuted}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------- Storyboard panel ----------
+\tcbuselibrary{raster}
+\newcommand{\panel}[3]{%
+  \begin{tcolorbox}[enhanced, colback=white, colframe=pulseline, boxrule=1pt, arc=10pt,
+      left=0pt, right=0pt, top=0pt, bottom=8pt, boxsep=0pt]
+    \includegraphics[width=\linewidth]{images/panel#1.png}\par
+    \vspace{6pt}
+    \hspace*{10pt}\begin{minipage}[t]{\dimexpr\linewidth-20pt\relax}
+      {\large\bfseries\color{pulseink}#2}\par\vspace{3pt}
+      {\small\color{pulsemuted}#3}
+    \end{minipage}
+  \end{tcolorbox}}
+\newenvironment{panelgrid}{\begin{tcbraster}[raster columns=2, raster equal height=rows,
+  raster column skip=12pt, raster row skip=12pt, raster valign=top]}{\end{tcbraster}}
+
+% =====================================================
+\begin{document}
+
+% ---------- Title page ----------
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{1.2cm}
+  \includegraphics[width=0.62\textwidth]{images/dau_logo.png}\par
+  \vspace{1.4cm}
+  {\LARGE\bfseries IE403 -- Human Computer Interaction\par}
+  \vspace{0.35cm}
+  {\Large\bfseries Week 2: Paper Prototype\par}
+  \vspace{1.1cm}
+  {\color{pulseteal}\Large\bfseries PULSE: Pediatric Emergency Dosage \&\\[2pt] Resuscitation Tablet\par}
+  \vspace{1.3cm}
+  \rule{0.85\textwidth}{0.6pt}\par
+  \vspace{0.45cm}
+  {\large\bfseries Group: Click \& Connect\par}
+  \vspace{0.35cm}
+  {\large Diya Patel (202301216)\par Priyanshi Gothi (202301226)\par Rujal Jiyani (202301277)\par}
+  \vspace{0.45cm}
+  \rule{0.85\textwidth}{0.6pt}\par
+  \vspace{0.9cm}
+  {\large Submitted to: \textbf{Prof. Kalyan Sashidhar}\par}
+  \vfill
+\end{titlepage}
+
+% ---------- 1. Goals ----------
+\section{Goals}
+
+\begin{enumerate}
+  \item \textbf{Fast size entry:} Let the clinician enter the child's weight or length once, in a few taps, even when the child cannot be weighed.
+  \item \textbf{Exact volume to draw:} Show the exact volume in mL to draw up for the selected crash-cart drug, calculated from the child's size.
+  \item \textbf{Second-clinician check:} Let a second clinician independently verify the dose before it is given to the child.
+  \item \textbf{Mistake recovery:} Catch input mistakes as they happen and let users correct them without starting over.
+  \item \textbf{Learning and reference:} Give staff a quick reference and training guide for rarely used paediatric emergency drugs.
+\end{enumerate}
+
+% ---------- 2. Feedback ----------
+\section{Feedback}
+
+\subsection{When the user waits}
+\textbf{Initial design:} The design is good, but when moving from the paper prototype to the proof of concept (PoC), keep in mind to add appropriate subtle details that make the app feel responsive when the user pauses to think or has to wait for some reason.
+
+\textbf{Things we implemented in our PoC:}
+\begin{itemize}
+  \item Every button and key changes colour and shrinks slightly the moment it is pressed, so a gloved tap is clearly registered.
+  \item Blinking cursor in the number field; the value appears as it is typed.
+  \item Confirm stays greyed out until the value is valid, showing what the app is waiting for.
+  \item Doses are calculated on the tablet, so results appear instantly with no loading screen.
+\end{itemize}
+
+\subsection{When the user makes a mistake}
+\textbf{Initial design:} Make sure to add proper validation and clear ways to resolve errors.
+
+\textbf{Things we implemented in our PoC:}
+\begin{itemize}
+  \item Accepted range always shown under the field.
+  \item Out-of-range value: red border, warning icon and message, e.g.\ ``Maximum length is 150 cm. Allowed range: 30--150 cm.''
+  \item The message waits 0.6 s after typing stops, so it does not flash while typing ``0.'' on the way to ``0.8''.
+  \item Edit Measurement / Edit weight return to the keypad with the old value filled in.
+  \item Home asks ``Leave this calculation?'' before clearing data.
+\end{itemize}
+
+\subsection{When the user finishes}
+\textbf{Initial design:} Clearly communicate to the user that the task is finished.
+
+\textbf{Things we implemented in our PoC:}
+\begin{itemize}
+  \item Dose Confirmed screen with a large animated green tick.
+  \item Final summary: weight, drug, dose, concentration, route, ``Verified by 2 clinicians'', and the volume to draw highlighted in bold.
+  \item All four progress steps show a tick.
+  \item Home button (top right) starts the next drug or patient.
+\end{itemize}
+
+% ---------- 3. Storyboard ----------
+\newpage
+\section{Storyboard}
+
+\textit{Dr.\ Vidhi Modi (ER resident, team leader) and Ranjan Vavadiya (paediatric trauma nurse) use PULSE for a 3-year-old in cardiac arrest, from the first call to the confirmed dose.}
+
+\vspace{4pt}
+\begin{panelgrid}
+  \panel{1}{The call}{Ambulance: a 3-year-old in cardiac arrest, arriving in 4 minutes. No weight known. Vidhi picks up the PULSE tablet.}
+  \panel{2}{No time for a scale}{CPR is running. Ranjan lays a measuring tape beside the child: 98 cm. Vidhi taps Length-based.}
+  \panel{3}{A gloved slip}{Her gloved finger hits 8 twice: 988 cm. The field turns red: ``Maximum length is 150 cm.'' Confirm stays grey. One tap on delete fixes it.}
+  \panel{4}{Size confirmed}{She picks Normal build. Each option already shows its estimated weight. Confirm Patient Details reads: 98 cm, Normal, 15.1 kg.}
+\end{panelgrid}
+
+\newpage
+\begin{panelgrid}
+  \panel{5}{Pick the drug}{Rhythm check: asystole. Under Cardiac Arrest she taps Adrenaline (Epinephrine). The patient size sits at the top, so she doesn't have to remember it.}
+  \panel{6}{The answer, in mL}{The result shows 1.5 mL in large type, with the working underneath: 0.01 mg/kg $\times$ 15.1 kg = 0.151 mg at 0.1 mg/mL. No mental maths.}
+  \panel{7}{Second clinician check}{Vidhi hands the tablet to Ranjan. He compares the screen with the vial in his hand, reads it back, and taps Confirm.}
+  \panel{8}{Dose Confirmed}{A big green tick and the full summary, verified by 2 clinicians. Ranjan gives the drug. Home at the top right starts the next drug.}
+\end{panelgrid}
+
+% ---------- 4. Heuristic evaluation ----------
+\newpage
+\section{Heuristic Evaluation}
+
+We checked the PULSE proof of concept against Nielsen's 10 usability heuristics and other standard HCI principles. Severity uses Nielsen's scale: 0 = no problem, 1 = cosmetic, 2 = minor, 3 = major, 4 = catastrophic.
+
+\subsection{Nielsen's 10 usability heuristics}
+
+{\small
+\rowcolors{2}{pulsetint!45}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{1.1cm}}
+\toprule
+\rowcolor{pulsetint}
+\textbf{Heuristic} & \textbf{How PULSE meets it} & \textbf{Issue found} & \textbf{Sev.} \\
+\midrule
+1. Visibility of system status & 4-step progress bar on every task screen; button press feedback; patient size chip on the medication list. & None major. & 0 \\
+2. Match with the real world & Clinical units (kg, cm, mg, mL); drugs grouped like the crash cart; concentration written as on the vial (0.1 mg/mL, 1:10,000). & None major. & 0 \\
+3. User control and freedom & Back on every screen; Home with ``Leave this calculation?''; Edit Measurement and Edit weight / length. & None. & 0 \\
+4. Consistency and standards & Same top bar, button styles and colour meanings on every screen. & None. & 0 \\
+5. Error prevention & Keypad allows one decimal place; out-of-range values blocked; max and adult dose caps; second-clinician check. & Body build choice is subjective and can change the estimated weight. & 2 \\
+6. Recognition rather than recall & Units and accepted range always visible; estimated weight shown for each body build; formula shown under the result. & None major. & 0 \\
+7. Flexibility and efficiency & Two entry methods (weight or length); large keypad for fast entry. & No shortcut to calculate several drugs for the same patient at once. & 2 \\
+8. Aesthetic and minimalist design & One primary action per screen; volume to draw is the largest number. & None major. & 0 \\
+9. Help users recover from errors & Plain messages that say what is wrong and the allowed range. & None major. & 0 \\
+10. Help and documentation & Protocols \& Guidelines page with step-by-step use and practice cases; Medication Reference. & Help is not linked from inside the task screens. & 1 \\
+\bottomrule
+\end{tabularx}
+}
+
+\subsection{Other HCI principles}
+
+{\small
+\rowcolors{2}{pulsetint!45}{white}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}X}
+\toprule
+\rowcolor{pulsetint}
+\textbf{Principle} & \textbf{How PULSE applies it} \\
+\midrule
+Fitts's law & Touch targets are at least 56--64 px and primary buttons are full-width at the bottom, easy to hit with gloves. \\
+Hick's law & Each decision screen offers only 2--3 choices; drugs are grouped into 4 categories to shorten choice time. \\
+Shneiderman: design dialogs to yield closure & The task ends on a clear Dose Confirmed screen with a full summary. \\
+Shneiderman: reduce short-term memory load & Patient size, units and the dose formula stay on screen so nothing has to be remembered. \\
+Accessibility (WCAG 2.1 AA) & High-contrast text; colour is never the only signal (errors also use an icon and text); reduced-motion setting respected. \\
+Closed-loop communication (clinical safety) & The second-clinician check mirrors the read-back practice observed in our needfinding. \\
+\bottomrule
+\end{tabularx}
+}
+
+\subsection{Main issues to fix next}
+\begin{enumerate}
+  \item Add a short guide to judging body build on the Body Build screen (Heuristic 5).
+  \item Add a quick way to calculate the next drug for the same patient (Heuristic 7).
+\end{enumerate}
+
+\end{document}
